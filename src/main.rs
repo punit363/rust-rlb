@@ -10,6 +10,7 @@ fn main(){
     // 2. There can be only one owner at a time.
     // 3. When the owner goes out of scope, the value is dropped. scope is defined by curly brackets
 
+    //===================== Ownership for Simple and Complex data types ============================
 
     let mut x = 2;
     let y = x;
@@ -36,8 +37,9 @@ fn main(){
     println!("{}",s2);
     // use clone to create a second copy mannually for s3 letting s2 retain the orignal
 
-    //===============================================================================================
-    //Ownership for complex data types moves with functions taking them in parameters
+    //================================ Ownership In function Calls ===============================
+
+    // Ownership for complex data types moves with functions taking them in parameters
     let string1 = String::from("S T R I N G");
 
     let string2 =take_and_give_ownership(string1);
@@ -53,9 +55,61 @@ fn main(){
     print_num(p);
 
     println!("{}",p);
+
+    //====================================== Refrences ======================================
+
+    // What if we don't want to share ownership?
+    // Share a refrence then
+    // Ownership remains but references are immutable hence readonly data
+
+    let greetings1: String = String::from("Konichiwa");
+
+    print_greeting(&greetings1);
+    println!("{}",greetings1);
+
+    //================================== Mutable Refrences ======================================
+
+    // What if we don't want to share ownership and also mutate data?
+    // Share a mutable refrence then
+    // Ownership remains but only 1 mutable reference can be created
+
+    let mut greetings2: String = String::from("Konichiwa");
+
+    print_mutated_greeting(&mut greetings2);
+    println!("{}",greetings2);
+
+    // NOTE: MUTABLE REFRENCES CANNOT BE CREATED IF A IMMUTABLE REFRENCE ALREADY EXISTS IN THAT SCOPE
+    // BCOZ IMMUTABLE REFERENCES DO NOT EXPECT THE DATA TO CHANGE
+    // BUT IF THE SCOPE OF IMMUTABLE REFERENCE ENDS THEN WE CAN CREATE A MUTABLE REFRENCE
+
+    let mut s = String::from("mutable string")
+
+    let s1 = &s;
+    let s2 = &s;
+
+    println!("Scope for immutable reference ends here: s1-{}, s2-{}",s1,s2);
+
+    // SCOPE OF A VAR STARTS WHEN IT IS INITIALISED AND ENDS THE LAST TIME IT IS USED
+    // HENCE S1 AND S2 DONOT THROW ERR AND A MUTABLE REFERENCE CAN BE CREATED
+    let s3 = &mut s;
+    s3.push_str(" mutated");
+    println!("{}",s3)
+
+    //================================== Dangling Refrences ======================================
     
+    // fn dangling_refrence()->&String{
+    //     let s = String::from("ello");
+    //     return &s;
+    // }
+
+    // Above function is invalid as it tried to pass a refrence of 's' but as the function call completes Rust deleted s 
+    // which creates a Dangling Refrence which Ofcourse Rust doesn't let happen
+
+    // let str = dangling_refrence();
 }
 
+
+//============ Ownership ===========
 fn print_num(p:i8){
     println!("{}",p)
 }
@@ -68,3 +122,16 @@ fn take_and_give_ownership(string:String)->String{
 fn take_ownership(string:String){
     println!("take_ownership => {}",string);
 }
+
+//============ Refrences ===========
+fn print_greeting(greet:&String){
+    println!("print_greeting => {}",greet);
+    // greet.push_str("minnasan"); throws an error as references are immutable
+}
+
+//============ Mutable Refrences ===========
+fn print_mutated_greeting(greet:&mut String){
+    greet.push_str(" minnasan"); 
+    println!("print_mutated_greeting => {}",greet);
+}
+
