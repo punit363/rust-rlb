@@ -1,3 +1,5 @@
+use std::{fmt::Display, iter::Sum};
+
 struct Newsletter{
     author:String,
     headline:String,
@@ -38,6 +40,24 @@ trait Summary{
     }
 }
 
+//using trait in function========================================
+// fn notify(item: &impl Summary){
+//     println!("Breaking News!: {}",item.summarise())
+// }
+
+//Another way to write the same shit
+// fn notify<T:Summary>(item: &T){
+//     println!("Breaking News!: {}",item.summarise())
+// }
+
+fn notify(item1: &impl Summary, item2: &(impl Display + Summary)){
+// item2 can only be something which has both the traits
+}
+
+// fn notify<T:Summary+Display>(item1: &T, item2: &T){
+// //
+// }
+
 fn main(){
 
     let newsletter = Newsletter{
@@ -56,4 +76,5 @@ fn main(){
     println!("Tweet Summary: {}",tweet.summarise());
     println!("Newsletter Summary: {}",newsletter.summarise());
 
+    notify(&tweet);
 }
