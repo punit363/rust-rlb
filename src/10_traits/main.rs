@@ -24,7 +24,6 @@ impl Summary for Tweet{
         format!("{}, by {}", self.content, self.username)
     }
 }
-
 trait Summary{
     // traits define a collection of method signatures to represent shared, abstract behavior
     // hence we are not defining the body for this method just its characterstic that it returns a string
@@ -46,11 +45,11 @@ trait Summary{
 // }
 
 //Another way to write the same shit
-// fn notify<T:Summary>(item: &T){
-//     println!("Breaking News!: {}",item.summarise())
-// }
+fn notify<T:Summary>(item: &T){
+    println!("Breaking News!: {}",item.summarise())
+}
 
-fn notify(item1: &impl Summary, item2: &(impl Display + Summary)){
+fn notify2(item1: &impl Summary, item2: &(impl Display + Summary)){
 // item2 can only be something which has both the traits
 }
 
@@ -58,6 +57,7 @@ fn notify(item1: &impl Summary, item2: &(impl Display + Summary)){
 // //
 // }
 
+ 
 fn main(){
 
     let newsletter = Newsletter{
@@ -75,6 +75,16 @@ fn main(){
 
     println!("Tweet Summary: {}",tweet.summarise());
     println!("Newsletter Summary: {}",newsletter.summarise());
+
+    // can only return something with a summary trait i.e. tweet or newsletter
+    // fn return_summarizable() -> impl Summary {
+    //     Tweet{
+    //         username:String::from("John@Does"),
+    //         content:String::from("The sky is falling!"),
+    //         reply:false,
+    //         retweet:false
+    //     };
+    // }
 
     notify(&tweet);
 }
