@@ -1,102 +1,59 @@
-fn main(){
-
-    //Generics in Functions============================
-    let number_list = vec![34,40,52,76,21,88];
-
-    let largest_number = get_largest(number_list);
-
-    println!("The largest number is {}",largest_number);
-
-    let char_list = vec!['a','c','k','p','t'];
-
-
-    let largest_char = get_largest(char_list);
-
-    println!("The largest char is {}",largest_char);
-
-    //Generics in Structs==============================
-    // struct Point{
-    //     x:i32,
-    //     y:i32
-    // }
-    // let p = Point{x:33,y:22};
-    
-    // struct Point<T>{
-    //     x:T,
-    //     y:T
-    // }
-    // let p = Point{x:33.5,y:22.1};
-
-    struct Point<T,U>{
-        x:T,
-        y:U
-    }
-    let p1 = Point{x:33,y:22};
-    let p2 = Point{x:33.5,y:22.1};
-    let p3 = Point{x:33,y:22.1};
-    let p3 = Point{x:'a',y:'b'};
-
-    let p4 = p3.mix(p2);
-
-    println!("X : {} Y : {}",p4.x,p4.y);
-
-    //Generics in Methods
-    // impl<U> Point<U>{
-    //     //available to points where x and y are of same type
-    //     fn x(&self)->&U{
-    //         &self.x
-    //     }
-
-    // impl<f32> Point<f32>{
-    //     //available to points of f32 type
-    //     fn y(&self)->f32{
-    //         self.y
-    //     }
-
-    // }
-
-    //more complext
-    impl<T,U> Point<T,U>{
-
-        fn mix<V,W>(self, other:Point<V,W>)->Point<T,W>{
-            Point{
-                x:self.x,
-                y:other.y
-            }
-        }
-    }
-
-    //Generics in Enums==============================
-    enum Result <T,E>{
-        Ok(T),
-        Err(E)
-    }
-
-
+struct Newsletter{
+    author:String,
+    headline:String,
+    content:String,
 }
 
-// fn largest_number(number_list: Vec<i32>) -> i32 {
-//     let mut largest_number = number_list[0];
-    
-//     for number in number_list{
-//         if number>largest_number{
-//             largest_number=number;
-//         }
-//     }
-//     largest_number
-// }
+struct Tweet{
+    username:String,
+    content:String,
+    reply:bool,
+    retweet:bool
+}
 
+impl Summary for Newsletter{
+    fn summarise(&self)->String {
+        format!("{}, by {}", self.headline, self.author)
+    }
+}
 
-//modifying the above function to take in any generic input
-// T is a generic just a representation, it could have been U, R, TYPE etc
-// PartialOrd(T can be ordered) / Copy(T can be copied) are traits
-fn get_largest<T:PartialOrd+Copy>(number_list: Vec<T>) -> T {
-        let mut largest = number_list[0];
-        
-        for number in number_list{
-            if number>largest{
-                largest=number;
-            }
-        }
-        largest
- }
+impl Summary for Tweet{
+    fn summarise(&self)->String {
+        format!("{}, by {}", self.content, self.username)
+    }
+}
+
+trait Summary{
+    // traits define a collection of method signatures to represent shared, abstract behavior
+    // hence we are not defining the body for this method just its characterstic that it returns a string
+    // fn summarise(&self)->String;
+
+    //This does not have a default implementation hence need to specify in both the Tweets and Newsletters
+    fn summarise(&self)->String;
+
+    //This is default implementation of trait if not specified
+    //At present both Tweet and Newletter overwrites this method 
+    fn summarise_authore(&self)->String{
+        format!("Read More...")
+    }
+}
+
+fn main(){
+
+    let newsletter = Newsletter{
+        author:String::from("John Does"),
+        headline:String::from("The sky is falling!"),
+        content:String::from("The sky is not actually falling."),
+    };
+
+    let tweet = Tweet{
+        username:String::from("John@Does"),
+        content:String::from("The sky is falling!"),
+        reply:false,
+        retweet:false
+    };
+
+    println!("Tweet Summary: {}",tweet.summarise());
+    println!("Newsletter Summary: {}",newsletter.summarise());
+
+}
