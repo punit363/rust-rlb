@@ -20,4 +20,34 @@ fn main() {
     println!();
     
     // Note: `v1` cannot be used here anymore because `into_iter()` consumed it.
+
+    let counter = Counter::new(5);
+
+    for num in counter {
+        println!("{}", num);
+    }
+}
+
+struct Counter {
+    count: usize,
+    max: usize,
+}
+
+impl Counter {
+    fn new(max: usize) -> Self {
+        Counter { count: 0, max }
+    }
+}
+
+impl Iterator for Counter {
+    type Item = usize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.count < self.max {
+            self.count += 1;
+            Some(self.count)
+        } else {
+            None
+        }
+    }
 }
